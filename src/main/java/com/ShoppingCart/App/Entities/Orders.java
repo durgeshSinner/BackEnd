@@ -1,5 +1,6 @@
 package com.ShoppingCart.App.Entities;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -8,7 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
+import javax.persistence.PrePersist;
 
 @Entity
 public class Orders {
@@ -18,6 +19,16 @@ public class Orders {
 	@OneToMany( fetch=FetchType.EAGER)
 	private List<OrderItem> OrderedProducts;
 	private int userId;
+	private String OrderedTime;
+	@PrePersist
+    public void prePersist() {
+		LocalDateTime date= LocalDateTime.now();
+		Integer day = date.getDayOfMonth();
+		Integer Month = date.getMonthValue();
+		Integer Year = date.getYear();
+		this.OrderedTime = day.toString()+"/"+Month.toString()+"/" +Year.toString();
+		
+    }
 	public int getOrderId() {
 		return OrderId;
 	}
@@ -36,19 +47,29 @@ public class Orders {
 	public void setUserId(int userId) {
 		this.userId = userId;
 	}
+	public String getOrderedTime() {
+		return OrderedTime;
+	}
+	public void setOrderedTime(String orderedTime) {
+		OrderedTime = orderedTime;
+	}
 	@Override
 	public String toString() {
-		return "Orders [OrderId=" + OrderId + ", OrderedProducts=" + OrderedProducts + ", userId=" + userId + "]";
+		return "Orders [OrderId=" + OrderId + ", OrderedProducts=" + OrderedProducts + ", userId=" + userId
+				+ ", OrderedTime=" + OrderedTime + "]";
 	}
-	public Orders(int orderId, List<OrderItem> orderedProducts, int userId) {
+	public Orders(int orderId, List<OrderItem> orderedProducts, int userId, String orderedTime) {
 		super();
 		OrderId = orderId;
 		OrderedProducts = orderedProducts;
 		this.userId = userId;
+		OrderedTime = orderedTime;
 	}
 	public Orders() {
 		super();
 	}
+	
+	
 	
 
 }

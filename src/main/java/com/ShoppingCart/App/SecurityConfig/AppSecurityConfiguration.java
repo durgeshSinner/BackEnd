@@ -15,6 +15,7 @@ import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
@@ -30,17 +31,20 @@ public class AppSecurityConfiguration extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.csrf().disable()
-		.cors().disable()
+		.cors().and()
 		.authorizeRequests()
-//		        .antMatchers("/products/addProduct", "/products/update").hasRole("ADMIN")
-//				.antMatchers("/cart/**", "/getprofile/**", "/updateprofile").hasRole("USER")
-//				.antMatchers("/products/getById/{productId}", 
-//						"/products/{category}", 
-//						"/products/search/{searchString}",
-//						"/products/{category}/getFilteredProducts").permitAll()
-//				.antMatchers("/signup").permitAll()
-//				.antMatchers("/token").permitAll()
-		        .antMatchers("/**").permitAll()	
+		        .antMatchers("/products/addProduct", "/products/update").hasRole("ADMIN")
+				.antMatchers("/cart/**", "/getprofile/**", "/updateprofile", "/order/**","/voucher/**").hasRole("USER")
+				.antMatchers("/products/getById/{productId}", 
+						"/products/{category}", 
+						"/products/search/{searchString}",
+						"/products/{category}/getFilteredProducts",
+						"/products/{category}/{subcategory}",
+						"/products/getFilteredProducts",
+						"/products/Getcategories").permitAll()
+				.antMatchers("/signup").permitAll()
+				.antMatchers("/token", "/getusers").permitAll()
+//		        .antMatchers("/**").permitAll()	
 				.anyRequest().authenticated().and()
 				.sessionManagement()
 				.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
@@ -65,7 +69,7 @@ public class AppSecurityConfiguration extends WebSecurityConfigurerAdapter {
 		return super.authenticationManagerBean();
 	}
 	@Bean
-	public FilterRegistrationBean corsFilter() {
+	public CorsConfigurationSource corsConfigurationSource() {
 	    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 	    CorsConfiguration config = new CorsConfiguration();
 	    config.setAllowCredentials(true);
@@ -73,10 +77,9 @@ public class AppSecurityConfiguration extends WebSecurityConfigurerAdapter {
 	    config.addAllowedHeader("*");
 	    config.addAllowedMethod("*");
 	    source.registerCorsConfiguration("/**", config);
-	    FilterRegistrationBean bean = new FilterRegistrationBean(new CorsFilter(source));
-	    bean.setOrder(0);
-	    return bean;
+	    return source;
 	}
+	
 	
 	
 }
