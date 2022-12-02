@@ -5,58 +5,58 @@ import com.ShoppingCart.App.Entities.Products;
 
 public class FilterService {
 
-	private List<Products> Products;
-	private String Category;
-	private String SubCategory;
-	private int MinPrice;
-	private int MaxPrice;
+	private List<Products> products;
+	private String category;
+	private String subCategory;
+	private int minPrice;
+	private int maxPrice;
 	public List<Products> getProducts() {
-		return Products;
+		return products;
 	}
 	public void setProducts(List<Products> products) {
-		Products = products;
+		this.products = products;
 	}
 	public String getCategory() {
-		return Category;
+		return category;
 	}
 	public void setCategory(String category) {
-		Category = category;
+		this.category = category;
 	}
 	public String getSubCategory() {
-		return SubCategory;
+		return subCategory;
 	}
 	public void setSubCategory(String subCategory) {
-		SubCategory = subCategory;
+		this.subCategory = subCategory;
 	}
 	public int getMinPrice() {
-		return MinPrice;
+		return minPrice;
 	}
 	public void setMinPrice(int minPrice) {
-		MinPrice = minPrice;
+		this.minPrice = minPrice;
 	}
 	public int getMaxPrice() {
-		return MaxPrice;
+		return maxPrice;
 	}
 	public void setMaxPrice(int maxPrice) {
-		MaxPrice = maxPrice;
+		this.maxPrice = maxPrice;
 	}
-	public FilterService(List<com.ShoppingCart.App.Entities.Products> products, String category, String subCategory,
-			int minPrice, int maxPrice) {
+	public FilterService(List<Products> products, String category, String subCategory, int minPrice, int maxPrice) {
 		super();
-		Products = products;
-		Category = category;
-		SubCategory = subCategory;
-		MinPrice = minPrice;
-		MaxPrice = maxPrice;
+		this.products = products;
+		this.category = category;
+		this.subCategory = subCategory;
+		this.minPrice = minPrice;
+		this.maxPrice = maxPrice;
 	}
 	public FilterService() {
 		super();
 	}
 	@Override
 	public String toString() {
-		return "FilterService [Products=" + Products + ", Category=" + Category + ", SubCategory=" + SubCategory
-				+ ", MinPrice=" + MinPrice + ", MaxPrice=" + MaxPrice + "]";
+		return "FilterService [products=" + products + ", category=" + category + ", subCategory=" + subCategory
+				+ ", minPrice=" + minPrice + ", maxPrice=" + maxPrice + "]";
 	}
+	
 	
 	
 	

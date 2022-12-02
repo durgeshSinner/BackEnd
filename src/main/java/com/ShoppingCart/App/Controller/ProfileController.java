@@ -9,13 +9,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ShoppingCart.App.Entities.Cart;
 import com.ShoppingCart.App.Entities.User;
-import com.ShoppingCart.App.Entities.UserCredentials;
-import com.ShoppingCart.App.Repositories.UserCredRepository;
-import com.ShoppingCart.App.Services.Cartservice;
 import com.ShoppingCart.App.Services.UserServices;
 import com.ShoppingCart.App.Services.UsercredentialServices;
 
@@ -25,56 +22,47 @@ public class ProfileController {
 	private UserServices userservice;
 	@Autowired
 	private UsercredentialServices usercredservice;
-	@Autowired
-	private Cartservice cartservices;
-	@Autowired
-	private UserCredRepository usercredrepo;
-//	@PostMapping("/login")
-//	public String Login() {
-//		return "<h1>log in user</h1>";
-//	}
+
 	
 	@PostMapping("/signup")
 	public ResponseEntity<Integer> Signup(@RequestBody User u ){
 		try {
 			User user = userservice.CreateUser(u);
 			int i = user.getUserId();
-			Cart cart = cartservices.CreateCart(user);
-			System.out.println(cart);
 			return new ResponseEntity<Integer>(i,HttpStatus.OK);
 		}
 		catch(Exception e) {
 			System.out.println(e.getMessage());
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+			return new ResponseEntity<Integer>(HttpStatus.CONFLICT);
 		}
 		
 		
 	}
-	@GetMapping("/getusercred/{email}")
-	public ResponseEntity<UserCredentials> GetUserCred(@PathVariable("email") String email){
-		try {
-			UserCredentials uc = usercredrepo.findById(email).get();
-			
-		    return  new ResponseEntity<UserCredentials>(uc , HttpStatus.OK);
-			
-		    
-		}
-		catch(Exception e) {
-			System.out.println(e.getMessage());
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-		}
-	}
+//	@GetMapping("/getusercred/{email}")
+//	public ResponseEntity<UserCredentials> GetUserCred(@PathVariable("email") String email){
+//		try {
+//			UserCredentials uc = usercredrepo.findById(email).get();
+//			
+//		    return  new ResponseEntity<UserCredentials>(uc , HttpStatus.OK);
+//			
+//		    
+//		}
+//		catch(Exception e) {
+//			System.out.println(e.getMessage());
+//			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+//		}
+//	}
 	
 	
 	@GetMapping("/getprofile/{userId}")
-	public ResponseEntity<User> GetUser(@PathVariable("userId") int userId) {
+	public ResponseEntity<User> GetUser(@PathVariable("userId") int userId, @RequestHeader("Authorization") String tokenHeader) {
 		try {
-			User user = userservice.GetUser(userId);
+			User user = userservice.GetUser(userId,tokenHeader);
 			return  new ResponseEntity<User>(user , HttpStatus.OK);
 		}
 		catch(Exception e) {
 			System.out.println(e.getMessage());
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
 		}
 	}
 	
@@ -83,14 +71,14 @@ public class ProfileController {
 //		return "<h1>log in user</h1>";
 //	}
 	@PostMapping("/updateprofile")
-	public ResponseEntity<Void> Updateprofile(@RequestBody User user) {
+	public ResponseEntity<Void> Updateprofile(@RequestBody User user,  @RequestHeader("Authorization") String tokenHeader) {
 		try {
-			userservice.UpdateUser(user);
+			userservice.UpdateUser(user, tokenHeader);
 			return  new ResponseEntity<Void>( HttpStatus.OK);
 		}
 		catch(Exception e) {
 			System.out.println(e.getMessage());
-			return ResponseEntity.status(401).build();
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
 		}
 		
 	}

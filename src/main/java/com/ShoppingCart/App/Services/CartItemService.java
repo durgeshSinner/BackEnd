@@ -2,6 +2,8 @@ package com.ShoppingCart.App.Services;
 
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -25,14 +27,10 @@ public class CartItemService {
 	public CartItem getCartItem(int userId, int cartitemId) {
 		return cartitemrepository.findById(cartitemId).get();
 		
-//		Cart cart = cartservice.GetCart(userId);
-//		List<CartItem> items = cart.getProducts();
-//		List<CartItem> filteritems= items.stream().filter(item -> {
-//			if(item.getCartItemId()==cartitemId) {return true;}
-//			else {return false;}
-//		}).toList();
-//		return filteritems.get(0);
 	}
+//	public CartItem GetCartItem(int userId, int productId) {
+//		return cartrepository.findCartItemByUserIdandProductId(userId, productId);
+//	}
 	public CartItem AddCartItem(int userId, int productId) {
 		Cart cart = cartservice.GetCart(userId);
 		List<CartItem> filteritems = cart.getProducts().stream().filter(item -> {
@@ -44,16 +42,15 @@ public class CartItemService {
 			Products product = productservice.GetProduct(productId);
 			item.setProduct(product);
 			item.setQuantity(1);
-			return this.AddNewCartItem(userId, item);
+			return this.AddNewCartItem(userId, item, cart);
 		}
 		else {
 			CartItem item = filteritems.get(0);
-			return this.AddExistingItem(userId, item);
+			return this.AddExistingItem(userId, item, cart);
 		}
 	}
 	
-	public CartItem AddNewCartItem(int userId, CartItem item) {
-		Cart cart = cartservice.GetCart(userId);
+	public CartItem AddNewCartItem(int userId, CartItem item, Cart cart) {
 		List<CartItem>items = cart.getProducts();
 		items.add(item);
 		cart.setProducts(items);
@@ -63,8 +60,7 @@ public class CartItemService {
 		
 	}
 	
-	public CartItem AddExistingItem(int userId, CartItem item) {
-		Cart cart = cartservice.GetCart(userId);
+	public CartItem AddExistingItem(int userId, CartItem item, Cart cart) {
 		List<CartItem>items = cart.getProducts();
 		for(CartItem c : items) {
 			if(c.getCartItemId()==item.getCartItemId()) {
@@ -80,7 +76,7 @@ public class CartItemService {
 	public String RemoveItem(int userId, int productId) {
 		Cart cart = cartservice.GetCart(userId);
 		List<CartItem> items = cart.getProducts();
-		int index=0;
+		Integer index= null;
 		int j=0;
 		for(CartItem i : items) {
 			if(i.getProduct().getProductId()==productId) {
@@ -90,7 +86,7 @@ public class CartItemService {
 		}
 		int cartitemid = items.get(index).getCartItemId();
 		String name = items.get(index).getProduct().getProductName();
-		if(j!=0) {items.remove(index);}
+		if(j==1) {items.remove((int)index);}
 		cart.setProducts(items);
 		cartitemrepository.deleteById(cartitemid);
 		cartrepository.save(cart);
@@ -99,14 +95,10 @@ public class CartItemService {
 		
 		return "product : " + name + " was removed";
 	}
-	public CartItem ChangeProductQuantity(int userId , int productId, int quantity) {
-		Cart cart = cartservice.GetCart(userId);
-		List<CartItem> filteredItems = cart.getProducts().stream().filter(item -> {
-			if(item.getProduct().getProductId()==productId) {return true;}
-			else {return false;}
-		}).toList();
-		CartItem item = this.getCartItem(userId, filteredItems.get(0).getCartItemId());
-		item.setQuantity(quantity);
-		return cartitemrepository.save(item);
+	
+	@Transactional
+	public void ChangeProductQuantity( int quantity, int userId , int productId) {
+		
+		cartrepository.updateQuantitybyUserIdandProductId(quantity, userId, productId);
 	}
 }

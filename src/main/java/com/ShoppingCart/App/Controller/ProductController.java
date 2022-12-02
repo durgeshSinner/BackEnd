@@ -49,22 +49,22 @@ public class ProductController {
 	public Products GetProductById(@PathVariable("productId") int Id) {
 		return service.GetProduct(Id);
 	}
-	@GetMapping("/{category}")
-	public List<Products> GetProductByCategory(@PathVariable("category") String category) {
-		List <Products> p =service.GetProductByCategory(category);
-		return p;
-	}
+//	@GetMapping("/{category}")
+//	public List<Products> GetProductByCategory(@PathVariable("category") String category) {
+//		List <Products> p =service.GetProductByCategory(category);
+//		return p;
+//	}
 	@GetMapping("/search/{searchString}")
 	public List<Products> GetProductBySearch(@PathVariable("searchString") String search) {
 		return service.GetProductBySearch(search);
 	}
-	@PostMapping("/{category}/getFilteredProducts")
-	public List<Products> GetProductByFilter(@PathVariable("category") String Category, @RequestBody FilterService filter) {
-		System.out.println(filter);
-		System.out.println(filter.getMinPrice());
-		System.out.println(filter.getMaxPrice());
-		return service.GetProductsbyFilter(Category, filter);
-	}
+//	@PostMapping("/{category}/getFilteredProducts")
+//	public List<Products> GetProductByFilter(@PathVariable("category") String Category, @RequestBody FilterService filter) {
+//		System.out.println(filter);
+//		System.out.println(filter.getMinPrice());
+//		System.out.println(filter.getMaxPrice());
+//		return service.GetProductsbyFilter(Category, filter);
+//	}
 	@GetMapping("/{category}/{subcategory}")
 	public List<Products> GetProductsBySubcategory(@PathVariable("category") String Category,@PathVariable("subcategory") String SubCategory)
 	{

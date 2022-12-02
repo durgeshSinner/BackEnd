@@ -40,98 +40,26 @@ public class ProductServices {
 	}
 
 	public List<Products> GetProductByCategory(String category) {
-		List<Products> allproducts = productrepository.findAll();
-
-		return allproducts.stream().filter(product -> product.getProductCategory().equals(category)).toList();
-
+		return productrepository.findByProductCategory(category);
 	}
 
 	public List<Products> GetProductBySearch(String search) {
-		List<Products> allproducts = productrepository.findAll();
-		String[] searchstrings = search.split(" ");
-		return allproducts.stream().filter(product -> {
-			String name = product.getProductName();
-			String[] productstrings = name.split(" ");
-			int j = 0;
-			for (int i = 0; i < searchstrings.length; i++) {
-				for (int k = 0; k < productstrings.length; k++) {
-					if (searchstrings[i].equals(productstrings[k])) {
-						j++;
-					}
-				}
-			}
-			if (j != 0) {
-				return true;
-			} else {
-				return false;
-			}
-		}).toList();
+		return productrepository.findByProductnameLike('%'+search+'%');
 
 	}
 
-	public List<Products> GetProductsbyFilter(String Category, FilterService filter) {
-		filter.setCategory(Category);
-		List<Products> productlist = this.GetProductByCategory(Category);
-		List<Products> filteredproductlist = productlist.stream().filter(product -> {
-			if (product.getProductPrice() >= filter.getMinPrice()
-					&& product.getProductPrice() <= filter.getMaxPrice()) {
-				return true;
-			} else {
-				return false;
-			}
-		}).toList();
-		return filteredproductlist;
-	}
-
+	
 	public List<Products> GetFilteredProducts(FilterService filter) {
 		if (filter.getProducts().size() == 0) {
-			System.out.println("ni");
-			if (filter.getCategory().equals("")) {
-				return productrepository.findAll().stream().filter(product -> {
-					if (product.getProductPrice() >= filter.getMinPrice()
-							&& product.getProductPrice() <= filter.getMaxPrice()) {
-						return true;
-					} else {
-						return false;
-					}
-				}).toList();
-			} else {
-				if (filter.getSubCategory().equals("")) {
-					return productrepository.findAll().stream().filter(product -> {
-						if (product.getProductCategory().equals(filter.getCategory())) {
-							return true;
-						} else {
-							return false;
-						}
-					}).filter(product -> {
-						if (product.getProductPrice() >= filter.getMinPrice()
-								&& product.getProductPrice() <= filter.getMaxPrice()) {
-							return true;
-						} else {
-							return false;
-						}
-					}).toList();
-				} else {
-					return productrepository.findAll().stream().filter(product -> {
-						if (product.getProductCategory().equals(filter.getCategory())) {
-							return true;
-						} else {
-							return false;
-						}
-					}).filter(product -> {
-						if (product.getProductSubCategory().equals(filter.getSubCategory())) {
-							return true;
-						} else {
-							return false;
-						}
-					}).filter(product -> {
-						if (product.getProductPrice() >= filter.getMinPrice()
-								&& product.getProductPrice() <= filter.getMaxPrice()) {
-							return true;
-						} else {
-							return false;
-						}
-					}).toList();
+			if(filter.getCategory().equals("")) {
+				return productrepository.findByPriceFilters(filter.getMinPrice(), filter.getMaxPrice());
+			}
+			else {
+				if(filter.getSubCategory().equals("")) {
+					return productrepository.findByCategoryFilters(filter.getCategory(),filter.getMinPrice(), filter.getMaxPrice());
+				}
+				else {
+					return productrepository.findBySubCategoryFilters(filter.getCategory(), filter.getSubCategory(), filter.getMinPrice(), filter.getMaxPrice());
 				}
 			}
 		} else {
@@ -188,21 +116,8 @@ public class ProductServices {
 	}
 
 	public List<Products> GetbySubcategories(String Category, String SubCategory) {
-		List<Products> productslist = this.GetProductByCategory(Category);
-		List<Products> filteredproducts = productslist.stream().filter(product -> {
-			if (product.getProductSubCategory().equals(SubCategory)) {
-				return true;
-			} else {
-				return false;
-			}
-		}).toList();
-		return filteredproducts;
-	}
-
-	public Set<String> GetAllCategories() {
-		Set<String> Categories = productrepository.findAll().stream().map(product -> product.getProductCategory())
-				.collect(Collectors.toSet());
-		return Categories;
+		return productrepository.findBySubCategoryFilters(Category, SubCategory, 0, 100);
+		
 	}
 
 }

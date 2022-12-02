@@ -17,20 +17,10 @@ public class UsercredentialServices {
 	private BCryptPasswordEncoder PasswordEncoder; 
 	
 	public UserCredentials CreateUser (UserCredentials userCred) throws Exception{
-		List<UserCredentials> checkUserCred=ucrepository.findAll().stream().filter(uc -> {
-			if(uc.getUserEmail().equals(userCred.getUserEmail())) {
-				return true;
-			}
-			else {return false;}
-		}).toList();
-		if(checkUserCred.isEmpty()) {
-			String password = PasswordEncoder.encode(userCred.getPassword()); 
-			userCred.setPassword(password);
-			return  ucrepository.save(userCred);
-		}
-		else {
-			throw new Exception("User Already Exists");
-		}
+		if(ucrepository.existsById(userCred.getUserEmail())) {throw new Exception("User Already Exists");}
+		else {String password = PasswordEncoder.encode(userCred.getPassword()); 
+		userCred.setPassword(password);
+		return ucrepository.save(userCred);}
 		
 	}
 	public List<String> getUserEmails() {

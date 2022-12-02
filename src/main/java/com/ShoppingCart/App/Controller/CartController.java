@@ -44,10 +44,10 @@ public class CartController {
 		return cartitemservice.RemoveItem(userId, productId);
 	}
 	@PostMapping("/{userId}/changequantity/{productId}")
-	public CartItem ChangeQuantity(@PathVariable("userId") int userId, @PathVariable("productId") int productId,
+	public void ChangeQuantity(@PathVariable("userId") int userId, @PathVariable("productId") int productId,
 			@RequestBody Quantity quantity) {
 		
-		return cartitemservice.ChangeProductQuantity(userId, productId, quantity.getQuantity());
+		cartitemservice.ChangeProductQuantity(quantity.getQuantity(), userId, productId);
 	}
 	@GetMapping("/clear/{userId}")
 	public Cart clearCart(@PathVariable("userId") int userId) {

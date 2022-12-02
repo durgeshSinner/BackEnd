@@ -5,8 +5,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ShoppingCart.App.SecurityConfig.CustomUserDetailService;
@@ -38,6 +40,17 @@ public class TokenController {
 		int Id = userservice.GetUserbyUserEmail(jwtrequest.getUserEmail());
 		JwtResponse response = new JwtResponse(token, Id);
 		return ResponseEntity.ok(response);
+	}
+	@GetMapping("/test")
+	public ResponseEntity<?> test(@RequestHeader("Authorization") String token){
+		String username = null;
+		if(token!=null && token.startsWith("Bearer ")) {
+			String Token = token.substring(7);
+			username= jwtutil.extractUsername(Token);
+			System.out.println(username);
+			
+		}
+		return ResponseEntity.ok(username);
 	}
 
 }

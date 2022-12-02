@@ -12,75 +12,76 @@ public class Products {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private int ProductId;
-	private String ProductName;
-	private int ProductPrice;
-	private String ProductDetails;
-	private String ProductCategory;
-	private String ProductSubCategory;
-	private String Url;
+	private int productId;
+	private String productName;
+	private int productPrice;
+	private String productDetails;
+	private String productCategory;
+	private String productSubCategory;
+	private String url;
 	public Products() {
 		super();
 	}
 	public Products(int productId, String productName, int productPrice, String productDetails, String productCategory,
 			String productSubCategory, String url) {
 		super();
-		ProductId = productId;
-		ProductName = productName;
-		ProductPrice = productPrice;
-		ProductDetails = productDetails;
-		ProductCategory = productCategory;
-		ProductSubCategory = productSubCategory;
-		Url = url;
+		this.productId = productId;
+		this.productName = productName;
+		this.productPrice = productPrice;
+		this.productDetails = productDetails;
+		this.productCategory = productCategory;
+		this.productSubCategory = productSubCategory;
+		this.url = url;
 	}
 	@Override
 	public String toString() {
-		return "Products [ProductId=" + ProductId + ", ProductName=" + ProductName + ", ProductPrice=" + ProductPrice
-				+ ", ProductDetails=" + ProductDetails + ", ProductCategory=" + ProductCategory
-				+ ", ProductSubCategory=" + ProductSubCategory + ", Url=" + Url + "]";
+		return "Products [productId=" + productId + ", productName=" + productName + ", productPrice=" + productPrice
+				+ ", productDetails=" + productDetails + ", productCategory=" + productCategory
+				+ ", productSubCategory=" + productSubCategory + ", url=" + url + "]";
 	}
 	public int getProductId() {
-		return ProductId;
+		return productId;
 	}
 	public void setProductId(int productId) {
-		ProductId = productId;
+		this.productId = productId;
 	}
 	public String getProductName() {
-		return ProductName;
+		return productName;
 	}
 	public void setProductName(String productName) {
-		ProductName = productName;
+		this.productName = productName;
 	}
 	public int getProductPrice() {
-		return ProductPrice;
+		return productPrice;
 	}
 	public void setProductPrice(int productPrice) {
-		ProductPrice = productPrice;
+		this.productPrice = productPrice;
 	}
 	public String getProductDetails() {
-		return ProductDetails;
+		return productDetails;
 	}
 	public void setProductDetails(String productDetails) {
-		ProductDetails = productDetails;
+		this.productDetails = productDetails;
 	}
 	public String getProductCategory() {
-		return ProductCategory;
+		return productCategory;
 	}
 	public void setProductCategory(String productCategory) {
-		ProductCategory = productCategory;
+		this.productCategory = productCategory;
 	}
 	public String getProductSubCategory() {
-		return ProductSubCategory;
+		return productSubCategory;
 	}
 	public void setProductSubCategory(String productSubCategory) {
-		ProductSubCategory = productSubCategory;
+		this.productSubCategory = productSubCategory;
 	}
 	public String getUrl() {
-		return Url;
+		return url;
 	}
 	public void setUrl(String url) {
-		Url = url;
+		this.url = url;
 	}
+	
 	
 	
 	
