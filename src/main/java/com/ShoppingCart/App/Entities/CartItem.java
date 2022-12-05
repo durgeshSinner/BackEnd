@@ -10,7 +10,7 @@ import javax.persistence.OneToOne;
 @Entity
 public class CartItem {
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int CartItemId;
 	@OneToOne(fetch = FetchType.EAGER)
 	private Products product;

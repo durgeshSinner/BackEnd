@@ -1,6 +1,7 @@
 package com.ShoppingCart.App.Controller;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ShoppingCart.App.Entities.User;
+import com.ShoppingCart.App.Exception.APIException;
+import com.ShoppingCart.App.Exception.UserSecurityException;
 import com.ShoppingCart.App.Services.UserServices;
 import com.ShoppingCart.App.Services.UsercredentialServices;
 
@@ -31,9 +34,12 @@ public class ProfileController {
 			int i = user.getUserId();
 			return new ResponseEntity<Integer>(i,HttpStatus.OK);
 		}
+		catch(APIException e) {
+			return new ResponseEntity<Integer>(HttpStatus.CONFLICT);
+		}
 		catch(Exception e) {
 			System.out.println(e.getMessage());
-			return new ResponseEntity<Integer>(HttpStatus.CONFLICT);
+			return new ResponseEntity<Integer>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		
 		
@@ -60,9 +66,17 @@ public class ProfileController {
 			User user = userservice.GetUser(userId,tokenHeader);
 			return  new ResponseEntity<User>(user , HttpStatus.OK);
 		}
+		catch(UserSecurityException e) {
+			System.out.println(e.getMessage());
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+		}
+		catch(NoSuchElementException e) {
+			System.out.println(e.getMessage());
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+		}
 		catch(Exception e) {
 			System.out.println(e.getMessage());
-			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 	}
 	
@@ -76,11 +90,18 @@ public class ProfileController {
 			userservice.UpdateUser(user, tokenHeader);
 			return  new ResponseEntity<Void>( HttpStatus.OK);
 		}
+		catch(UserSecurityException e) {
+			System.out.println(e.getMessage());
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+		}
+		catch(NoSuchElementException e) {
+			System.out.println(e.getMessage());
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+		}
 		catch(Exception e) {
 			System.out.println(e.getMessage());
-			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
-		
 	}
 	@GetMapping("/getusers")
 	public List<String> getUsers(){

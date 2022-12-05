@@ -1,7 +1,6 @@
 package com.ShoppingCart.App.Controller;
 
 import java.util.List;
-import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -42,8 +41,8 @@ public class ProductController {
 	}
 	
 	@PostMapping("/update")
-	public Products UpdateProduct(@RequestBody Products product) {
-		return service.ModifyProduct(product);
+	public void UpdateProduct(@RequestBody Products product) {
+		service.ModifyProduct(product);
 	}
 	@GetMapping("/getById/{productId}")
 	public Products GetProductById(@PathVariable("productId") int Id) {

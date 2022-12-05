@@ -30,7 +30,9 @@ public class VoucherService {
 			Integer day = date.getDayOfMonth();
 			Integer Month = date.getMonthValue();
 			Integer Year = date.getYear();
-			if(Integer.parseInt(datearray[2])>Year) {
+			String IssuedTime = day.toString()+"/"+Month.toString()+"/" +Year.toString();
+			if(Integer.parseInt(datearray[2])<Year) {
+				voucher.setIssuedTime(IssuedTime);
 				if (0 <= offernumber && offernumber < 45) { voucher.setOffer(Offers.Buy1Get1); }
 		        else if (45 <= offernumber && offernumber < 90) {voucher.setOffer(Offers.Buy2Get2); }
 		        else if (90 <= offernumber && offernumber < 135) { voucher.setOffer(Offers.Flat30); }
@@ -41,7 +43,8 @@ public class VoucherService {
 				return repository.save(voucher);
 			}
 			else{
-				if(Integer.parseInt(datearray[1])>Month) {
+				if(Integer.parseInt(datearray[1])<Month) {
+					voucher.setIssuedTime(IssuedTime);
 					if (0 <= offernumber && offernumber < 45) { voucher.setOffer(Offers.Buy1Get1); }
 			        else if (45 <= offernumber && offernumber < 90) {voucher.setOffer(Offers.Buy2Get2); }
 			        else if (90 <= offernumber && offernumber < 135) { voucher.setOffer(Offers.Flat30); }
@@ -52,7 +55,8 @@ public class VoucherService {
 					return repository.save(voucher);
 				}
 				else{
-					if(Integer.parseInt(datearray[0])>day) {
+					if(Integer.parseInt(datearray[0])<day) {
+						voucher.setIssuedTime(IssuedTime);
 						if (0 <= offernumber && offernumber < 45) { voucher.setOffer(Offers.Buy1Get1); }
 				        else if (45 <= offernumber && offernumber < 90) {voucher.setOffer(Offers.Buy2Get2); }
 				        else if (90 <= offernumber && offernumber < 135) { voucher.setOffer(Offers.Flat30); }

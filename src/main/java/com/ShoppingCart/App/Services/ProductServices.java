@@ -1,9 +1,8 @@
 package com.ShoppingCart.App.Services;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
+
+import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -28,14 +27,9 @@ public class ProductServices {
 		return product;
 	}
 
-	public Products ModifyProduct(Products Product) {
-		Products product = productrepository.findById(Product.getProductId()).get();
-		product.setProductName(Product.getProductName());
-		product.setProductDetails(Product.getProductDetails());
-		product.setProductCategory(Product.getProductCategory());
-		product.setProductPrice(Product.getProductPrice());
-		productrepository.save(product);
-		return product;
+	@Transactional
+	public void ModifyProduct(Products Product) {
+		productrepository.updateProducts(Product.getProductCategory(), Product.getProductSubCategory(), Product.getProductDetails(), Product.getProductName(),Product.getProductId() , Product.getUrl(), Product.getProductPrice());
 
 	}
 
@@ -116,7 +110,7 @@ public class ProductServices {
 	}
 
 	public List<Products> GetbySubcategories(String Category, String SubCategory) {
-		return productrepository.findBySubCategoryFilters(Category, SubCategory, 0, 100);
+		return productrepository.findBySubCategory(Category, SubCategory);
 		
 	}
 

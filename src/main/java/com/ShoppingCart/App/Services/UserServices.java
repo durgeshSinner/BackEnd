@@ -8,6 +8,8 @@ import org.springframework.stereotype.Component;
 
 import com.ShoppingCart.App.Entities.User;
 import com.ShoppingCart.App.Entities.UserCredentials;
+import com.ShoppingCart.App.Exception.APIException;
+import com.ShoppingCart.App.Exception.UserSecurityException;
 import com.ShoppingCart.App.Repositories.UserRepository;
 import com.ShoppingCart.App.Services.Cartservice;
 import com.ShoppingCart.App.TokenHelper.JWTUtil;
@@ -24,38 +26,37 @@ public class UserServices {
 	@Autowired
 	private JWTUtil jwtutil;
 
-	
-	public User GetUser(int Id, String tokenHeader) throws NoSuchElementException, SecurityException {
-			String Token = tokenHeader.substring(7);
-			String userEmail= jwtutil.extractUsername(Token);
-			User user = userrepository.findById(Id).get();
-			
-			if(!user.getCredentials().getUserEmail().equals(userEmail)) {
-				
-				throw new SecurityException("Can not do this action");
-			}
-			else {return user;}
-		
-	}
-	public void UpdateUser(User user, String tokenHeader) throws NoSuchElementException, SecurityException {
+	public User TokenMatcher(int Id, String tokenHeader) throws UserSecurityException, NoSuchElementException{
 		String Token = tokenHeader.substring(7);
 		String userEmail= jwtutil.extractUsername(Token);
-		User u = userrepository.findById(user.getUserId()).get();
-
-		if(!u.getCredentials().getUserEmail().equals(userEmail)) {
-			
-			throw new SecurityException("Can not do this action");
+		try {User user = userrepository.findById(Id).get();
+		if(!user.getCredentials().getUserEmail().equals(userEmail)) 
+		{throw new UserSecurityException("Can not do this action");}
+		else {return user;}
 		}
-		else {
-			u.setUserName(user.getUserName());
-			u.setUserAddress(user.getUserAddress());
-			u.setUserPhone(user.getUserPhone());
-			userrepository.save(u);
+		catch(NoSuchElementException e) {
+			throw new UserSecurityException("Can not do this action");
 		}
+		
 		
 	}
 	
-	public User CreateUser(User user) throws Exception{
+	public User GetUser(int Id, String tokenHeader) throws NoSuchElementException, UserSecurityException {
+			return this.TokenMatcher(Id, tokenHeader);
+		
+	}
+	public void UpdateUser(User user, String tokenHeader) throws NoSuchElementException, UserSecurityException {
+		User checkedUser = this.TokenMatcher(user.getUserId(), tokenHeader);
+		
+		checkedUser.setUserName(user.getUserName());
+		checkedUser.setUserAddress(user.getUserAddress());
+		checkedUser.setUserPhone(user.getUserPhone());
+			userrepository.save(checkedUser);
+		
+		
+	}
+	
+	public User CreateUser(User user) throws APIException{
 		
 		UserCredentials newuc = new UserCredentials();
 		newuc.setUserEmail(user.getCredentials().getUserEmail());
@@ -72,14 +73,8 @@ public class UserServices {
 		newuser.setUserId(Id);
 		cartservices.CreateCart(newuser);
 		
-		return userrepository.save(newuser);
+		return newuser;
 		
 	}
-	public int GetUserbyUserEmail(String UserEmail) {
-		User UserbyUserEmail = userrepository.findAll().stream().filter( user -> {
-			if(user.getCredentials().getUserEmail().equals(UserEmail)) {return true;}
-			else {return false;}
-		}).findAny().get();
-		return UserbyUserEmail.getUserId();
-	}
+	
 }
