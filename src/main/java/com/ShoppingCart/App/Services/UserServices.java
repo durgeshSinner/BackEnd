@@ -1,6 +1,7 @@
 package com.ShoppingCart.App.Services;
 
 
+import java.util.Date;
 import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,9 @@ import com.ShoppingCart.App.Exception.UserSecurityException;
 import com.ShoppingCart.App.Repositories.UserRepository;
 import com.ShoppingCart.App.Services.Cartservice;
 import com.ShoppingCart.App.TokenHelper.JWTUtil;
+
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.MalformedJwtException;
 
 @Component
 public class UserServices {
@@ -40,6 +44,7 @@ public class UserServices {
 		
 		
 	}
+	
 	
 	public User GetUser(int Id, String tokenHeader) throws NoSuchElementException, UserSecurityException {
 			return this.TokenMatcher(Id, tokenHeader);
@@ -74,6 +79,25 @@ public class UserServices {
 		cartservices.CreateCart(newuser);
 		
 		return newuser;
+		
+	}
+	public Object[] CheckToken(String token) throws Exception {
+		try {
+			System.out.println("hello");
+			String username= jwtutil.extractUsername(token);
+			System.out.println("hello");
+				User user = userrepository.findByEmail(username);
+				Object[] userinfo = new Object[2]; 
+				userinfo[0] = user.getUserId();
+				String role = user.getCredentials().getRole();
+				userinfo[1] = role.substring(5, user.getCredentials().getRole().length());
+				return userinfo;
+			
+			}
+		catch(Exception e) {
+			System.out.println("hello");
+			throw new Exception("token Exception");
+		}
 		
 	}
 	

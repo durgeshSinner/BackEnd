@@ -39,7 +39,7 @@ public class ProfileController {
 		}
 		catch(Exception e) {
 			System.out.println(e.getMessage());
-			return new ResponseEntity<Integer>(HttpStatus.INTERNAL_SERVER_ERROR);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 		
 		

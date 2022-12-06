@@ -65,9 +65,13 @@ public class ProductController {
 //		return service.GetProductsbyFilter(Category, filter);
 //	}
 	@GetMapping("/{category}/{subcategory}")
-	public List<Products> GetProductsBySubcategory(@PathVariable("category") String Category,@PathVariable("subcategory") String SubCategory)
+	public ResponseEntity<List<Products>> GetProductsBySubcategory(@PathVariable("category") String Category,@PathVariable("subcategory") String SubCategory)
 	{
-		return service.GetbySubcategories(Category, SubCategory);
+		try {
+			List<Products> productsbysubcategory = service.GetbySubcategories(Category, SubCategory);
+			return new ResponseEntity<List<Products>>(productsbysubcategory,HttpStatus.OK);
+		}
+		catch(Exception e ) {return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();}
 	}
 	@GetMapping("/Getcategories")
 	public List<Category> GetAllCategories(){
