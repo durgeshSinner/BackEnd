@@ -5,7 +5,10 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 @Entity
 public class OrderItem {
@@ -16,19 +19,9 @@ public class OrderItem {
 	private Products product;
 	private int Quantity;
 	
-	public OrderItem() {
-		super();
-	}
-	public OrderItem(int orderItemId, Products product, int quantity) {
-		super();
-		OrderItemId = orderItemId;
-		this.product = product;
-		Quantity = quantity;
-	}
-	@Override
-	public String toString() {
-		return "OrderItem [OrderItemId=" + OrderItemId + ", product=" + product + ", Quantity=" + Quantity + "]";
-	}
+	@JsonBackReference
+	@ManyToOne(fetch = FetchType.EAGER)
+	private Orders order;
 	public int getOrderItemId() {
 		return OrderItemId;
 	}
@@ -47,8 +40,26 @@ public class OrderItem {
 	public void setQuantity(int quantity) {
 		Quantity = quantity;
 	}
-	
-	
-	
+	public Orders getOrder() {
+		return order;
+	}
+	public void setOrder(Orders order) {
+		this.order = order;
+	}
+	public OrderItem(int orderItemId, Products product, int quantity, Orders order) {
+		super();
+		OrderItemId = orderItemId;
+		this.product = product;
+		Quantity = quantity;
+		this.order = order;
+	}
+	public OrderItem() {
+		super();
+	}
+	@Override
+	public String toString() {
+		return "OrderItem [OrderItemId=" + OrderItemId + ", product=" + product + ", Quantity=" + Quantity + ", order="
+				+ order + "]";
+	}
 	
 }

@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ShoppingCart.App.Entities.Cart;
-import com.ShoppingCart.App.Entities.CartItem;
 import com.ShoppingCart.App.Services.CartItemService;
 import com.ShoppingCart.App.Services.Cartservice;
 import com.ShoppingCart.App.TokenHelper.Quantity;
@@ -23,42 +22,47 @@ public class CartController {
 	private Cartservice service;
 	@Autowired
 	private CartItemService cartitemservice;
-	
-	
+
 	@GetMapping("/{userId}/getCart")
-	public Cart GetCartById(@PathVariable("userId") int userId) {
-		return service.GetCart(userId);
-		
-	}
-	@GetMapping("/{userId}/getCartItem/{cartitemId}")
-	public CartItem GetCartItem(@PathVariable("userId") int userId, @PathVariable("cartitemId") int cartitemId) {
-		return cartitemservice.getCartItem(userId, cartitemId);
-	}
-	
-	@GetMapping("/{userId}/add/{productId}")
-	public ResponseEntity<Integer> AddtoCart(@PathVariable("userId") int userId, @PathVariable("productId") int productId) {
-		try {int itemId = cartitemservice.AddCartItem(userId, productId);
-		return new ResponseEntity<Integer>(itemId, HttpStatus.OK);}
-		catch(Exception e) {
-			return ResponseEntity.status(HttpStatus.CONFLICT).build();
+	public ResponseEntity<Cart> GetCartById(@PathVariable("userId") int userId) {
+		try {
+			Cart cart = service.GetCart(userId);
+			return new ResponseEntity<Cart>(cart, HttpStatus.OK);
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
-		
-		
+
 	}
+
+	@GetMapping("/{userId}/add/{productId}")
+	public ResponseEntity<Void> AddtoCart(@PathVariable("userId") int userId,
+			@PathVariable("productId") int productId) {
+		try {
+			cartitemservice.AddCartItem(userId, productId);
+			return new ResponseEntity<Void>( HttpStatus.OK);
+		} 
+		catch (Exception e) {
+			System.out.println(e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		}
+
+	}
+
 	@GetMapping("/{userId}/remove/{productId}")
-	public String RemoveFromCart(@PathVariable("userId") int userId, @PathVariable("productId") int productId) {
-		return cartitemservice.RemoveItem(userId, productId);
-	}
-	@PostMapping("/{userId}/changequantity/{productId}")
-	public void ChangeQuantity(@PathVariable("userId") int userId, @PathVariable("productId") int productId,
-			@RequestBody Quantity quantity) {
+	public ResponseEntity<Void> RemoveFromCart(@PathVariable("userId") int userId, @PathVariable("productId") int productId) {
+		try {cartitemservice.RemoveItem(userId, productId);
+		  return new ResponseEntity<Void>( HttpStatus.OK); }
+		catch(Exception e) {return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();}
 		
-		cartitemservice.ChangeProductQuantity(quantity.getQuantity(), userId, productId);
 	}
-	@GetMapping("/clear/{userId}")
-	public Cart clearCart(@PathVariable("userId") int userId) {
-		return service.ClearCartItems(userId);
+
+	@PostMapping("/{userId}/changequantity/{productId}")
+	public ResponseEntity<Void> ChangeQuantity(@PathVariable("userId") int userId, @PathVariable("productId") int productId,
+			@RequestBody Quantity quantity) {
+		try {cartitemservice.ChangeProductQuantity(quantity.getQuantity(), userId, productId);
+		  return new ResponseEntity<Void>( HttpStatus.OK); }
+		catch(Exception e) {return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();}
 	}
-	
+
 
 }

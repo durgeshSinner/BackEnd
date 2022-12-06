@@ -2,6 +2,8 @@ package com.ShoppingCart.App.Services;
 
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -28,18 +30,10 @@ public class Cartservice {
 		cart.setCartId( user.getUserId());
 		return cartrepository.save(cart);
 	}
-	public Cart ClearCartItems(int UserId) {
+	@Transactional
+	public void ClearCartItems(int UserId) {
+		cartitemrepository.DeleteCartItemsByUserId(UserId);
 		
-		Cart usercart = this.GetCart(UserId);
-		List<CartItem> usercartitems= usercart.getProducts();
-		usercart.setProducts(null);
-		cartrepository.save(usercart);
-		usercartitems.stream().map(item -> {
-			cartitemrepository.delete(item);
-			return null;
-		}).toList();
-		
-		return usercart;
 	}
 	
 }

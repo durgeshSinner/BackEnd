@@ -3,6 +3,7 @@ package com.ShoppingCart.App.Entities;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -11,12 +12,15 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 @Entity
 public class Orders {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private int OrderId;
-	@OneToMany( fetch=FetchType.EAGER)
+	private int orderId;
+	@JsonManagedReference
+	@OneToMany( fetch=FetchType.EAGER, mappedBy="order",cascade = CascadeType.ALL)
 	private List<OrderItem> OrderedProducts;
 	private int userId;
 	private String OrderedTime;
@@ -30,10 +34,10 @@ public class Orders {
 		
     }
 	public int getOrderId() {
-		return OrderId;
+		return orderId;
 	}
 	public void setOrderId(int orderId) {
-		OrderId = orderId;
+		this.orderId = orderId;
 	}
 	public List<OrderItem> getOrderedProducts() {
 		return OrderedProducts;
@@ -55,12 +59,12 @@ public class Orders {
 	}
 	@Override
 	public String toString() {
-		return "Orders [OrderId=" + OrderId + ", OrderedProducts=" + OrderedProducts + ", userId=" + userId
+		return "Orders [orderId=" + orderId + ", OrderedProducts=" + OrderedProducts + ", userId=" + userId
 				+ ", OrderedTime=" + OrderedTime + "]";
 	}
 	public Orders(int orderId, List<OrderItem> orderedProducts, int userId, String orderedTime) {
 		super();
-		OrderId = orderId;
+		this.orderId = orderId;
 		OrderedProducts = orderedProducts;
 		this.userId = userId;
 		OrderedTime = orderedTime;
@@ -68,8 +72,6 @@ public class Orders {
 	public Orders() {
 		super();
 	}
-	
-	
 	
 
 }

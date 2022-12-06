@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import com.ShoppingCart.App.Entities.User;
@@ -29,6 +30,8 @@ public class UserServices {
 	private Cartservice cartservices;
 	@Autowired
 	private JWTUtil jwtutil;
+	@Autowired 
+	private BCryptPasswordEncoder PasswordEncoder; 
 
 	public User TokenMatcher(int Id, String tokenHeader) throws UserSecurityException, NoSuchElementException{
 		String Token = tokenHeader.substring(7);
@@ -62,13 +65,10 @@ public class UserServices {
 	}
 	
 	public User CreateUser(User user) throws APIException{
-		
-		UserCredentials newuc = new UserCredentials();
-		newuc.setUserEmail(user.getCredentials().getUserEmail());
-		newuc.setPassword(user.getCredentials().getPassword());
-		newuc.setRole("ROLE_USER");
-		UserCredentials Credentials = usercredservice.CreateUser(newuc);
-		
+		UserCredentials Credentials = user.getCredentials();
+		String password = PasswordEncoder.encode(user.getCredentials().getPassword()); 
+		Credentials.setRole("ROLE_USER");
+		Credentials.setPassword(password);
 		User newuser = new User();
 		newuser.setCredentials(Credentials);
 		newuser.setUserAddress(user.getUserAddress());

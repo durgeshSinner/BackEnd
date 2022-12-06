@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 import com.ShoppingCart.App.Entities.Cart;
 import com.ShoppingCart.App.Entities.OrderItem;
 import com.ShoppingCart.App.Entities.Orders;
-import com.ShoppingCart.App.Repositories.OrderItemRepository;
 import com.ShoppingCart.App.Repositories.OrderRepository;
 
 @Component
@@ -17,16 +16,9 @@ public class OrderService {
 	private OrderRepository repository;
 	@Autowired
 	private Cartservice cartservice;
-	@Autowired
-	private UserServices userservice;
-	@Autowired
-	private OrderItemRepository orderitemrepository;
 	
 	public List<Orders> GetOrdersbyUserId(int userId){
-		return repository.findAll().stream().filter(order -> {
-			if(order.getUserId()==userId) {return true;}
-			else {return false;}
-		}).toList();
+		return repository.findByuserId(userId);
 	}
 	public Orders CreateOrders(int userId) {
 		Cart usercart = cartservice.GetCart(userId);
@@ -34,11 +26,12 @@ public class OrderService {
 		userorder.setUserId(userId);
 		userorder.setOrderedProducts(usercart.getProducts().stream().map(cartitem -> {
 			OrderItem orderitem = new OrderItem();
-			orderitem.setOrderItemId(cartitem.getCartItemId());
 			orderitem.setProduct(cartitem.getProduct());
 			orderitem.setQuantity(cartitem.getQuantity());
-			return orderitemrepository.save(orderitem);
+			orderitem.setOrder(userorder);
+			return orderitem;
 		}).toList());
+		
 		cartservice.ClearCartItems(userId);
 		return repository.save(userorder);
 		

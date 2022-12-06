@@ -2,11 +2,14 @@ package com.ShoppingCart.App.Entities;
 
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 public class Cart {
@@ -16,7 +19,8 @@ public class Cart {
 	@OneToOne( fetch=FetchType.EAGER)
 	private User user;
 	
-	@OneToMany( fetch=FetchType.EAGER)
+	@JsonManagedReference
+	@OneToMany( fetch=FetchType.EAGER, cascade = CascadeType.ALL, mappedBy="cart")
 	private List<CartItem> products;
 
 	public int getCartId() {

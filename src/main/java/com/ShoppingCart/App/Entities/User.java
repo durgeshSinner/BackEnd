@@ -1,5 +1,6 @@
 package com.ShoppingCart.App.Entities;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -12,7 +13,7 @@ public class User {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int UserId;
 	private String UserName;
-	@OneToOne
+	@OneToOne(cascade = CascadeType.ALL)
 	private UserCredentials Credentials;
 	private String UserPhone;
 	private Address UserAddress;
