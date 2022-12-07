@@ -18,10 +18,11 @@ public class OrderService {
 	private Cartservice cartservice;
 	
 	public List<Orders> GetOrdersbyUserId(int userId){
+		
 		return repository.findByuserId(userId);
 	}
-	public Orders CreateOrders(int userId) {
-		Cart usercart = cartservice.GetCart(userId);
+	public Orders CreateOrders(int userId, String token) {
+		Cart usercart = cartservice.GetCart(userId,token);
 		Orders userorder = new Orders();
 		userorder.setUserId(userId);
 		userorder.setOrderedProducts(usercart.getProducts().stream().map(cartitem -> {

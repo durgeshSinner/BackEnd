@@ -12,6 +12,5 @@ import com.ShoppingCart.App.Entities.UserCredentials;
 public interface UserCredRepository extends JpaRepository< UserCredentials , String>{
 	@Query(value = "select user_email from user_credentials;", nativeQuery = true)
 	List<String> getAllUserEmails();
-
 	
 }

@@ -36,8 +36,8 @@ public class VoucherService {
 				if (0 <= offernumber && offernumber < 45) { voucher.setOffer(Offers.Buy1Get1); }
 		        else if (45 <= offernumber && offernumber < 90) {voucher.setOffer(Offers.Buy2Get2); }
 		        else if (90 <= offernumber && offernumber < 135) { voucher.setOffer(Offers.Flat30); }
-		        else if (135 <= offernumber && offernumber < 225) { voucher.setOffer(Offers.BetterLuckNextTime);  }
-		        else if (225 <= offernumber && offernumber < 270) { voucher.setOffer(Offers.Upto50);  }
+		        else if (135 <= offernumber && offernumber < 225) { voucher.setOffer(Offers.OFF10);  }
+		        else if (225 <= offernumber && offernumber < 270) { voucher.setOffer(Offers.Flat50);  }
 		        else if (270 <= offernumber && offernumber < 315) { voucher.setOffer(Offers.FreeDelivery);  }
 		        else { voucher.setOffer(Offers.Offer);  }
 				return repository.save(voucher);
@@ -48,8 +48,8 @@ public class VoucherService {
 					if (0 <= offernumber && offernumber < 45) { voucher.setOffer(Offers.Buy1Get1); }
 			        else if (45 <= offernumber && offernumber < 90) {voucher.setOffer(Offers.Buy2Get2); }
 			        else if (90 <= offernumber && offernumber < 135) { voucher.setOffer(Offers.Flat30); }
-			        else if (135 <= offernumber && offernumber < 225) { voucher.setOffer(Offers.BetterLuckNextTime);  }
-			        else if (225 <= offernumber && offernumber < 270) { voucher.setOffer(Offers.Upto50);  }
+			        else if (135 <= offernumber && offernumber < 225) { voucher.setOffer(Offers.OFF10);  }
+			        else if (225 <= offernumber && offernumber < 270) { voucher.setOffer(Offers.Flat50);  }
 			        else if (270 <= offernumber && offernumber < 315) { voucher.setOffer(Offers.FreeDelivery);  }
 			        else{ voucher.setOffer(Offers.Offer);  }
 					return repository.save(voucher);
@@ -60,8 +60,8 @@ public class VoucherService {
 						if (0 <= offernumber && offernumber < 45) { voucher.setOffer(Offers.Buy1Get1); }
 				        else if (45 <= offernumber && offernumber < 90) {voucher.setOffer(Offers.Buy2Get2); }
 				        else if (90 <= offernumber && offernumber < 135) { voucher.setOffer(Offers.Flat30); }
-				        else if (135 <= offernumber && offernumber < 225) { voucher.setOffer(Offers.BetterLuckNextTime);  }
-				        else if (225 <= offernumber && offernumber < 270) { voucher.setOffer(Offers.Upto50);  }
+				        else if (135 <= offernumber && offernumber < 225) { voucher.setOffer(Offers.OFF10);  }
+				        else if (225 <= offernumber && offernumber < 270) { voucher.setOffer(Offers.Flat50);  }
 				        else if (270 <= offernumber && offernumber < 315) { voucher.setOffer(Offers.FreeDelivery);  }
 				        else{ voucher.setOffer(Offers.Offer);  }
 						return repository.save(voucher);
@@ -79,8 +79,8 @@ public class VoucherService {
 			if (0 <= offernumber && offernumber < 45) { voucher.setOffer(Offers.Buy1Get1); }
 	        else if (45 <= offernumber && offernumber < 90) {voucher.setOffer(Offers.Buy2Get2); }
 	        else if (90 <= offernumber && offernumber < 135) { voucher.setOffer(Offers.Flat30); }
-	        else if (135 <= offernumber && offernumber < 225) { voucher.setOffer(Offers.BetterLuckNextTime);  }
-	        else if (225 <= offernumber && offernumber < 270) { voucher.setOffer(Offers.Upto50);  }
+	        else if (135 <= offernumber && offernumber < 225) { voucher.setOffer(Offers.OFF10);  }
+	        else if (225 <= offernumber && offernumber < 270) { voucher.setOffer(Offers.Flat50);  }
 	        else if (270 <= offernumber && offernumber < 315) { voucher.setOffer(Offers.FreeDelivery);  }
 	        else{ voucher.setOffer(Offers.Offer);  }
 			return repository.save(voucher);

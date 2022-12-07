@@ -1,6 +1,7 @@
 package com.ShoppingCart.App.Controller;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ShoppingCart.App.Entities.Category;
 import com.ShoppingCart.App.Entities.Products;
+import com.ShoppingCart.App.Exception.APIException;
 import com.ShoppingCart.App.Filter.FilterService;
 import com.ShoppingCart.App.Services.CategoryService;
 import com.ShoppingCart.App.Services.ProductServices;
@@ -53,6 +55,8 @@ public class ProductController {
 		try {
 			Products product = service.GetProduct(Id);
 			return new ResponseEntity<Products>(product, HttpStatus.OK);
+		} catch (NoSuchElementException e) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
@@ -68,6 +72,8 @@ public class ProductController {
 		try {
 			List<Products> productslist = service.GetProductBySearch(search);
 			return new ResponseEntity<List<Products>>(productslist, HttpStatus.OK);
+		} catch (NoSuchElementException e) {
+			return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
@@ -86,6 +92,8 @@ public class ProductController {
 		try {
 			List<Products> productsbysubcategory = service.GetbySubcategories(Category, SubCategory);
 			return new ResponseEntity<List<Products>>(productsbysubcategory, HttpStatus.OK);
+		} catch (NoSuchElementException e) {
+			return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
@@ -105,7 +113,10 @@ public class ProductController {
 		try {
 			List<Products> filteredProducts = service.GetFilteredProducts(filter);
 			return new ResponseEntity<List<Products>>(filteredProducts, HttpStatus.OK);
-		} catch (Exception e) {
+		}catch(APIException e) {
+			return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+		}
+		catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 	}
