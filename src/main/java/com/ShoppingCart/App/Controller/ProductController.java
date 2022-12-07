@@ -25,38 +25,54 @@ public class ProductController {
 	private ProductServices service;
 	@Autowired
 	private CategoryService catservice;
-	
+
 	@PostMapping("/addProduct")
 	public ResponseEntity<Products> AddProduct(@RequestBody Products product) {
 		try {
 			Products p = service.AddProduct(product);
 			return new ResponseEntity<Products>(p, HttpStatus.OK);
-		}
-		catch(Exception e) {
+		} catch (Exception e) {
 			System.out.println(e.getMessage());
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
-		
-		
+
 	}
-	
+
 	@PostMapping("/update")
-	public void UpdateProduct(@RequestBody Products product) {
-		service.ModifyProduct(product);
+	public ResponseEntity<String> UpdateProduct(@RequestBody Products product) {
+		try {
+			service.ModifyProduct(product);
+			return new ResponseEntity<String>("modified", HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<String>("unable to modify", HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
+
 	@GetMapping("/getById/{productId}")
-	public Products GetProductById(@PathVariable("productId") int Id) {
-		return service.GetProduct(Id);
+	public ResponseEntity<Products> GetProductById(@PathVariable("productId") int Id) {
+		try {
+			Products product = service.GetProduct(Id);
+			return new ResponseEntity<Products>(product, HttpStatus.OK);
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		}
 	}
+
 //	@GetMapping("/{category}")
 //	public List<Products> GetProductByCategory(@PathVariable("category") String category) {
 //		List <Products> p =service.GetProductByCategory(category);
 //		return p;
 //	}
 	@GetMapping("/search/{searchString}")
-	public List<Products> GetProductBySearch(@PathVariable("searchString") String search) {
-		return service.GetProductBySearch(search);
+	public ResponseEntity<List<Products>> GetProductBySearch(@PathVariable("searchString") String search) {
+		try {
+			List<Products> productslist = service.GetProductBySearch(search);
+			return new ResponseEntity<List<Products>>(productslist, HttpStatus.OK);
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		}
 	}
+
 //	@PostMapping("/{category}/getFilteredProducts")
 //	public List<Products> GetProductByFilter(@PathVariable("category") String Category, @RequestBody FilterService filter) {
 //		System.out.println(filter);
@@ -65,22 +81,33 @@ public class ProductController {
 //		return service.GetProductsbyFilter(Category, filter);
 //	}
 	@GetMapping("/{category}/{subcategory}")
-	public ResponseEntity<List<Products>> GetProductsBySubcategory(@PathVariable("category") String Category,@PathVariable("subcategory") String SubCategory)
-	{
+	public ResponseEntity<List<Products>> GetProductsBySubcategory(@PathVariable("category") String Category,
+			@PathVariable("subcategory") String SubCategory) {
 		try {
 			List<Products> productsbysubcategory = service.GetbySubcategories(Category, SubCategory);
-			return new ResponseEntity<List<Products>>(productsbysubcategory,HttpStatus.OK);
+			return new ResponseEntity<List<Products>>(productsbysubcategory, HttpStatus.OK);
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
-		catch(Exception e ) {return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();}
 	}
+
 	@GetMapping("/Getcategories")
-	public List<Category> GetAllCategories(){
-		return catservice.GetallCategories();
+	public ResponseEntity<List<Category>> GetAllCategories() {
+		try {
+			return new ResponseEntity<List<Category>>(catservice.GetallCategories(), HttpStatus.OK);
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		}
 	}
+
 	@PostMapping("/getFilteredProducts")
-	public List<Products> GetFilteredProducts(@RequestBody FilterService filter){
-		System.out.println(filter.getProducts().stream().map(product -> {System.out.println(product.getProductName()); return product;}));
-		return service.GetFilteredProducts(filter);
+	public ResponseEntity<List<Products>> GetFilteredProducts(@RequestBody FilterService filter) {
+		try {
+			List<Products> filteredProducts = service.GetFilteredProducts(filter);
+			return new ResponseEntity<List<Products>>(filteredProducts, HttpStatus.OK);
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		}
 	}
 
 }

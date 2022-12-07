@@ -1,7 +1,5 @@
 package com.ShoppingCart.App.TokenHelper;
 
-import java.util.Arrays;
-
 public class JwtResponse {
 	private String token;
 	private int Id;

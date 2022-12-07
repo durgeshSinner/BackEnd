@@ -17,8 +17,13 @@ public class VoucherController {
 	@Autowired
 	private VoucherService service;
 	@GetMapping("/get/{userId}")
-	public Voucher getVoucher(@PathVariable("userId") int UserId) {
-		return service.getVoucher(UserId);
+	public ResponseEntity<Voucher> getVoucher(@PathVariable("userId") int UserId) {
+		try {
+			return new ResponseEntity<Voucher>(service.getVoucher(UserId), HttpStatus.OK);
+		}
+		catch(Exception e) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(service.getVoucher(UserId));
+		}
 	}
 	@GetMapping("/create/{userId}/{offernumber}")
 	public ResponseEntity<Voucher> createVoucher(@PathVariable("userId") int UserId,@PathVariable("offernumber") int offernumber) {

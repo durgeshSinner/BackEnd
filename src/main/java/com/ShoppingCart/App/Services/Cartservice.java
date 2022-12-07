@@ -1,14 +1,11 @@
 package com.ShoppingCart.App.Services;
 
-import java.util.List;
-
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.ShoppingCart.App.Entities.Cart;
-import com.ShoppingCart.App.Entities.CartItem;
 import com.ShoppingCart.App.Entities.User;
 import com.ShoppingCart.App.Repositories.CartItemRepository;
 import com.ShoppingCart.App.Repositories.CartRepository;

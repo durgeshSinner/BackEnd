@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import com.ShoppingCart.App.Entities.UserCredentials;
 
 public class CustomUserDetail implements UserDetails{
+	private static final long serialVersionUID = 1L;
 	private UserCredentials uc;
 
 	@Override

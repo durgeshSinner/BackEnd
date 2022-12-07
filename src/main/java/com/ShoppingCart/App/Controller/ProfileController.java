@@ -14,8 +14,6 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ShoppingCart.App.Entities.User;
-import com.ShoppingCart.App.Exception.APIException;
-import com.ShoppingCart.App.Exception.UserSecurityException;
 import com.ShoppingCart.App.Services.UserServices;
 import com.ShoppingCart.App.Services.UsercredentialServices;
 
@@ -26,23 +24,17 @@ public class ProfileController {
 	@Autowired
 	private UsercredentialServices usercredservice;
 
-	
 	@PostMapping("/signup")
-	public ResponseEntity<Integer> Signup(@RequestBody User u ){
+	public ResponseEntity<Integer> Signup(@RequestBody User u) {
 		try {
 			User user = userservice.CreateUser(u);
 			int i = user.getUserId();
-			return new ResponseEntity<Integer>(i,HttpStatus.OK);
-		}
-		catch(APIException e) {
-			return new ResponseEntity<Integer>(HttpStatus.CONFLICT);
-		}
-		catch(Exception e) {
+			return new ResponseEntity<Integer>(i, HttpStatus.OK);
+		}  catch (Exception e) {
 			System.out.println(e.getMessage());
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
-		
-		
+
 	}
 //	@GetMapping("/getusercred/{email}")
 //	public ResponseEntity<UserCredentials> GetUserCred(@PathVariable("email") String email){
@@ -58,55 +50,41 @@ public class ProfileController {
 //			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 //		}
 //	}
-	
-	
+
 	@GetMapping("/getprofile/{userId}")
-	public ResponseEntity<User> GetUser(@PathVariable("userId") int userId, @RequestHeader("Authorization") String tokenHeader) {
+	public ResponseEntity<User> GetUser(@PathVariable("userId") int userId) {
 		try {
-			User user = userservice.GetUser(userId,tokenHeader);
-			return  new ResponseEntity<User>(user , HttpStatus.OK);
-		}
-		catch(UserSecurityException e) {
-			System.out.println(e.getMessage());
-			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-		}
-		catch(NoSuchElementException e) {
+			User user = userservice.GetUser(userId);
+			return new ResponseEntity<User>(user, HttpStatus.OK);
+		} catch (NoSuchElementException e) {
 			System.out.println(e.getMessage());
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-		}
-		catch(Exception e) {
+		} catch (Exception e) {
 			System.out.println(e.getMessage());
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 	}
-	
-//	@PostMapping("/logout")
-//	public String Logout() {
-//		return "<h1>log in user</h1>";
-//	}
+
 	@PostMapping("/updateprofile")
-	public ResponseEntity<Void> Updateprofile(@RequestBody User user,  @RequestHeader("Authorization") String tokenHeader) {
+	public ResponseEntity<User> Updateprofile(@RequestBody User user,
+			@RequestHeader("Authorization") String tokenHeader) {
 		try {
-			userservice.UpdateUser(user, tokenHeader);
-			return  new ResponseEntity<Void>( HttpStatus.OK);
-		}
-		catch(UserSecurityException e) {
-			System.out.println(e.getMessage());
-			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-		}
-		catch(NoSuchElementException e) {
-			System.out.println(e.getMessage());
+			User updateduser = userservice.UpdateUser(user);
+			return new ResponseEntity<User>(updateduser, HttpStatus.OK);
+		} catch (NoSuchElementException e) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-		}
-		catch(Exception e) {
-			System.out.println(e.getMessage());
+		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 	}
+
 	@GetMapping("/getusers")
-	public List<String> getUsers(){
-		return usercredservice.getUserEmails();
+	public ResponseEntity<List<String>> getUsers() {
+		try {
+			return new ResponseEntity<List<String>>(usercredservice.getUserEmails(), HttpStatus.OK);
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		}
 	}
-	
 
 }
