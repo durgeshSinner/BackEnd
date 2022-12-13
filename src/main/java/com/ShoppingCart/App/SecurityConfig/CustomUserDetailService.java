@@ -16,6 +16,7 @@ public class CustomUserDetailService implements UserDetailsService{
 	private UserCredRepository repository;
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+		System.out.println("verification !");
 		UserCredentials uc =repository.findById(username).get();
 		return new CustomUserDetail(uc);
 	}

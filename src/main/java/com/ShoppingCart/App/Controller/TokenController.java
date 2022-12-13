@@ -19,7 +19,6 @@ import com.ShoppingCart.App.TokenHelper.JWTUtil;
 import com.ShoppingCart.App.TokenHelper.JwtRequest;
 import com.ShoppingCart.App.TokenHelper.JwtResponse;
 
-
 @RestController
 public class TokenController {
 
@@ -37,8 +36,10 @@ public class TokenController {
 	@PostMapping("/token")
 	public ResponseEntity<?> TokenGenration(@RequestBody JwtRequest jwtrequest) {
 		try {
+			System.out.println("verification");
 			this.authmanager.authenticate(
 					new UsernamePasswordAuthenticationToken(jwtrequest.getUserEmail(), jwtrequest.getPassword()));
+			System.out.println("verification");
 			UserDetails userdetails = customuserdetailservice.loadUserByUsername(jwtrequest.getUserEmail());
 			String token = jwtutil.generateToken(userdetails);
 			String role = userdetails.getAuthorities().toString();
