@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ShoppingCart.App.Entities.Category;
 import com.ShoppingCart.App.Entities.Products;
 import com.ShoppingCart.App.Exception.APIException;
-import com.ShoppingCart.App.Filter.FilterService;
+import com.ShoppingCart.App.Filter.Filter;
 import com.ShoppingCart.App.Services.CategoryService;
 import com.ShoppingCart.App.Services.ProductServices;
 
@@ -109,7 +109,7 @@ public class ProductController {
 	}
 
 	@PostMapping("/getFilteredProducts")
-	public ResponseEntity<List<Products>> GetFilteredProducts(@RequestBody FilterService filter) {
+	public ResponseEntity<List<Products>> GetFilteredProducts(@RequestBody Filter filter) {
 		try {
 			List<Products> filteredProducts = service.GetFilteredProducts(filter);
 			return new ResponseEntity<List<Products>>(filteredProducts, HttpStatus.OK);

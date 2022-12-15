@@ -1,20 +1,16 @@
 package com.ShoppingCart.App.Filter;
 
-import java.util.List;
-import com.ShoppingCart.App.Entities.Products;
-
-public class FilterService {
-
-	private List<Products> products;
+public class Filter {
+	private String productName;
 	private String category;
 	private String subCategory;
 	private int minPrice;
 	private int maxPrice;
-	public List<Products> getProducts() {
-		return products;
+	public String getProductName() {
+		return productName;
 	}
-	public void setProducts(List<Products> products) {
-		this.products = products;
+	public void setProductName(String productName) {
+		this.productName = productName;
 	}
 	public String getCategory() {
 		return category;
@@ -40,23 +36,18 @@ public class FilterService {
 	public void setMaxPrice(int maxPrice) {
 		this.maxPrice = maxPrice;
 	}
-	public FilterService(List<Products> products, String category, String subCategory, int minPrice, int maxPrice) {
+	public Filter(String productName, String category, String subCategory, int minPrice, int maxPrice) {
 		super();
-		this.products = products;
+		this.productName = productName;
 		this.category = category;
 		this.subCategory = subCategory;
 		this.minPrice = minPrice;
 		this.maxPrice = maxPrice;
 	}
-	public FilterService() {
+	public Filter() {
 		super();
+		// TODO Auto-generated constructor stub
 	}
-	@Override
-	public String toString() {
-		return "FilterService [products=" + products + ", category=" + category + ", subCategory=" + subCategory
-				+ ", minPrice=" + minPrice + ", maxPrice=" + maxPrice + "]";
-	}
-	
 	
 	
 	
